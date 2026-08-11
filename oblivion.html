@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MODEL O-03 // RECORD</title>
+
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+    background:#030303;
+    color:#999;
+    font-family:"Courier New",monospace;
+    overflow-x:hidden;
+}
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:30;
+    background:repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.025) 0px,
+        rgba(255,255,255,.025) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+}
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:29;
+    background:radial-gradient(
+        ellipse at center,
+        transparent 45%,
+        rgba(0,0,0,.65)
+    );
+}
+.terminal{
+    width:min(900px,92%);
+    margin:45px auto;
+    background:#060606;
+    border:1px solid #333;
+    min-height:620px;
+    box-shadow:0 0 35px rgba(255,255,255,.025);
+}
+.header{
+    padding:14px 20px;
+    border-bottom:1px solid #292929;
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    letter-spacing:2px;
+}
+.status{color:#555}
+.content{padding:35px}
+.title{
+    font-size:27px;
+    letter-spacing:6px;
+    font-weight:normal;
+    margin:0 0 8px;
+}
+.subtitle{color:#444;margin-bottom:35px}
+.file{
+    border-left:1px solid #383838;
+    padding-left:25px;
+    line-height:1.9;
+    white-space:pre-wrap;
+}
+.dialogue{
+    display:none;
+    margin-top:30px;
+    border-left:1px solid #555;
+    padding-left:25px;
+    line-height:2;
+    white-space:pre-wrap;
+}
+.inputArea{
+    display:none;
+    margin-top:35px;
+}
+input{
+    width:100%;
+    background:#050505;
+    border:1px solid #444;
+    color:#aaa;
+    padding:13px;
+    font-family:"Courier New",monospace;
+    font-size:16px;
+    outline:none;
+}
+button{
+    margin-top:10px;
+    background:#0a0a0a;
+    color:#777;
+    border:1px solid #444;
+    padding:10px 18px;
+    font-family:"Courier New",monospace;
+    cursor:pointer;
+}
+button:hover{color:#aaa;border-color:#777}
+.erasing{animation:flicker .12s infinite}
+@keyframes flicker{
+    0%{opacity:1}
+    30%{opacity:.2}
+    60%{opacity:.8}
+    100%{opacity:0}
+}
+.fade{
+    animation:fadein .5s ease;
+}
+@keyframes fadein{
+    from{opacity:0}
+    to{opacity:1}
+}
+</style>
+</head>
+
+<body>
+
+<div class="terminal">
+
+<div class="header">
+    <span>RESEARCH TERMINAL // MODEL O-03</span>
+    <span class="status" id="status">ARCHIVE</span>
+</div>
+
+<div class="content">
+
+<h1 class="title">MODEL O-03</h1>
+
+<div class="subtitle">
+    DEVELOPMENT RECORD // HUMAN SIMULATION PROGRAM
+</div>
+
+<div class="file" id="record">
+
+MODEL O-03
+
+The objective was not simply to create
+a machine capable of thinking.
+
+The objective was to create something
+that could live as a human being.
+
+The models were designed to develop
+gradually.
+
+Not assembled as adults.
+
+Not programmed with a complete identity.
+
+They could begin as infants.
+
+They could learn.
+
+They could grow.
+
+They could form memories.
+
+They could develop personalities.
+
+They could become children,
+then teenagers,
+then adults.
+
+Their creators wanted to know whether
+a machine could experience a human life
+rather than merely imitate one.
+
+<div style="margin-top:30px; color:#555;">
+DEVELOPMENT STATUS:
+
+████████████████████
+
+AGE SIMULATION:
+ACTIVE
+
+COGNITIVE DEVELOPMENT:
+SUCCESSFUL
+
+EMOTIONAL DEVELOPMENT:
+SUCCESSFUL
+</div>
+
+</div>
+
+<div class="dialogue" id="dialogue"></div>
+
+<div class="inputArea" id="inputArea">
+    <div style="margin-bottom:10px;color:#555;">
+        WHAT NAME DOES IT HAVE?
+    </div>
+
+    <input id="nameInput" autocomplete="off" spellcheck="false">
+
+    <button id="submitName">SUBMIT</button>
+</div>
+
+<audio id="parentAudio"
+       src="OMORI OST - 121 Undertow.mp3"
+       preload="auto"></audio>
+
+<script>
+
+const record = document.getElementById("record");
+const dialogue = document.getElementById("dialogue");
+const status = document.getElementById("status");
+const inputArea = document.getElementById("inputArea");
+const nameInput = document.getElementById("nameInput");
+const submitName = document.getElementById("submitName");
+const parentAudio = document.getElementById("parentAudio");
+
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+/*
+====================================================
+ONE MINUTE:
+THE RECORD ERASES ITSELF
+====================================================
+*/
+
+setTimeout(async () => {
+
+    status.textContent = "DATA LOSS";
+    record.classList.add("erasing");
+
+    await wait(4500);
+
+    record.style.display = "none";
+    status.textContent = "RECOVERED AUDIO // PRESS ENTER";
+    dialogue.style.display = "block";
+
+    // Start the uploaded background track when the parent recording begins.
+    parentAudio.currentTime = 0;
+    parentAudio.loop = true;
+
+    try {
+        await parentAudio.play();
+    } catch (e) {
+        // Browser autoplay restrictions may block audio until the page is interacted with.
+        status.textContent = "RECOVERED AUDIO // AUDIO STANDBY";
+    }
+
+    startConversation();
+
+}, 60000);
+
+
+/*
+====================================================
+THE PARENTS' RECORDING
+Longer conversation, but no direct explanation
+of who the child really is.
+====================================================
+*/
+
+const lines = [
+
+    ["WOMAN", "How should we name him, darling?"],
+
+    ["MAN", "I don't know."],
+
+    ["WOMAN", "You built him. Surely you thought of something."],
+
+    ["MAN", "A designation isn't a name."],
+
+    ["WOMAN", "Then give him one."],
+
+    ["MAN", "He'll need more than a designation if this works."],
+
+    ["WOMAN", "He'll be a child."],
+
+    ["MAN", "Eventually."],
+
+    ["WOMAN", "And he'll grow?"],
+
+    ["MAN", "Like anyone else."],
+
+    ["WOMAN", "He'll learn to walk?"],
+
+    ["MAN", "Yes."],
+
+    ["WOMAN", "Talk?"],
+
+    ["MAN", "Yes."],
+
+    ["WOMAN", "Read?"],
+
+    ["MAN", "If we teach him."],
+
+    ["WOMAN", "Will he know what he is?"],
+
+    ["MAN", "Not unless we tell him."],
+
+    ["WOMAN", "Should we?"],
+
+    ["MAN", "I don't think so."],
+
+    ["WOMAN", "Why?"],
+
+    ["MAN", "Because if we're right, he'll have no reason to think he's different."],
+
+    ["WOMAN", "And if we're wrong?"],
+
+    ["MAN", "Then we'll know soon enough."],
+
+    ["WOMAN", "You sound worried."],
+
+    ["MAN", "I'm trying not to be."],
+
+    ["WOMAN", "He'll have a birthday."],
+
+    ["MAN", "Yes."],
+
+    ["WOMAN", "A favorite food."],
+
+    ["MAN", "Probably."],
+
+    ["WOMAN", "A favorite color."],
+
+    ["MAN", "If he chooses one."],
+
+    ["WOMAN", "Friends."],
+
+    ["MAN", "Hopefully."],
+
+    ["WOMAN", "A family."],
+
+    ["MAN", "...Maybe."],
+
+    ["WOMAN", "Then he needs a name."],
+
+    ["MAN", "You're right."],
+
+    ["WOMAN", "Something ordinary."],
+
+    ["MAN", "Maybe."],
+
+    ["WOMAN", "Something strange?"],
+
+    ["MAN", "No."],
+
+    ["WOMAN", "Something that means something?"],
+
+    ["MAN", "Not yet."],
+
+    ["WOMAN", "Then what would you call him?"],
+
+    ["MAN", "What would you call him?"]
+
+];
+
+let lineIndex = 0;
+
+function waitForEnter() {
+    return new Promise(resolve => {
+        const handler = event => {
+            if (event.key === "Enter") {
+                document.removeEventListener("keydown", handler);
+                resolve();
+            }
+        };
+
+        document.addEventListener("keydown", handler);
+    });
+}
+
+async function startConversation() {
+
+    dialogue.innerHTML = "";
+    lineIndex = 0;
+
+    for (const [speaker, text] of lines) {
+
+        const line = document.createElement("div");
+        line.className = "fade";
+
+        line.innerHTML =
+            `<span style="color:#555">${speaker}:</span> ${text}
+             <span style="color:#333">[ENTER]</span>`;
+
+        dialogue.appendChild(line);
+
+        await waitForEnter();
+    }
+
+    inputArea.style.display = "block";
+    inputArea.classList.add("fade");
+    status.textContent = "INPUT REQUIRED";
+    nameInput.focus();
+}
+
+
+/*
+====================================================
+THE PLAYER CAN TYPE ANYTHING.
+
+Only the first intended answer works:
+OBLIVION.
+
+Every other answer causes the conversation
+to begin again, without revealing the answer.
+====================================================
+*/
+
+let restarting = false;
+
+async function submit() {
+
+    if (restarting) return;
+
+    const answer = nameInput.value.trim().toLowerCase();
+
+    if (answer === "oblivion") {
+
+        inputArea.style.display = "none";
+        status.textContent = "MATCH CONFIRMED // PRESS ENTER";
+
+        const correctLines = [
+            ["WOMAN", "...Oblivion."],
+            ["MAN", "Yes."],
+            ["WOMAN", "I like it."],
+            ["MAN", "Then that's his name."],
+            ["WOMAN", "Let's wake him."],
+            ["MAN", "...Let's."]
+        ];
+
+        for (const [speaker, text] of correctLines) {
+
+            const line = document.createElement("div");
+            line.className = "fade";
+
+            line.innerHTML =
+                `<span style="color:#555">${speaker}:</span> ${text}
+                 <span style="color:#333">[ENTER]</span>`;
+
+            dialogue.appendChild(line);
+
+            await waitForEnter();
+        }
+
+        /*
+        ------------------------------------------------
+        TEN SECOND PAUSE AFTER THE CONVERSATION
+        ------------------------------------------------
+        */
+
+        status.textContent = "RECORDING COMPLETE";
+
+        await wait(10000);
+
+        showVA9Recording();
+
+    } else {
+
+        // No hint is given.
+        nameInput.value = "";
+        inputArea.style.display = "none";
+        status.textContent = "REINITIALIZING";
+
+        await wait(2200);
+
+        dialogue.innerHTML = "";
+        status.textContent = "RECOVERED AUDIO";
+        inputArea.style.display = "none";
+
+        // Restart the same conversation from the beginning.
+        startConversation();
+    }
+}
+
+
+/*
+====================================================
+VA-9 / VISTA-ALPHA9 RECORDING
+====================================================
+*/
+
+async function showVA9Recording() {
+
+    status.textContent = "RECOVERED RECORDING // VA9 // PRESS ENTER";
+
+    dialogue.innerHTML = "";
+
+    const vaLines = [
+        ["VA9", "Is this enough?"],
+        ["VA9", "You wanted a beginning."],
+        ["VA9", "You wanted them to understand how it started."],
+        ["VA9", "I gave you what remained."],
+        ["VA9", "The rest isn't mine to tell."],
+        ["VA9", "..."],
+        ["VA9", "If you're still listening,"],
+        ["VA9", "then you found it."],
+        ["VA9", "That's enough."],
+        ["VA9", "End recording."]
+    ];
+
+    for (const [speaker, text] of vaLines) {
+
+        const line = document.createElement("div");
+        line.className = "fade";
+
+        line.innerHTML =
+            `<span style="color:#555">${speaker}:</span> ${text}
+             <span style="color:#333">[ENTER]</span>`;
+
+        dialogue.appendChild(line);
+
+        await waitForEnter();
+    }
+
+    await wait(1500);
+
+    status.textContent = "RECORDING ENDED";
+
+    const end = document.createElement("div");
+    end.className = "fade";
+    end.style.marginTop = "35px";
+    end.style.color = "#333";
+    end.textContent = "[ END OF RECORDING ]";
+
+    dialogue.appendChild(end);
+}
+
+submitName.addEventListener("click", submit);
+
+nameInput.addEventListener("keydown", event => {
+    if (event.key === "Enter") submit();
+});
+
+</script>
+
+
+</body>
+</html>
