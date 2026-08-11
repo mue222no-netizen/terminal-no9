@@ -1202,16 +1202,10 @@ async function submitFinal() {
     }
 
 
-    // SECRET ROUTE: CASTERILL
-    const normalizedAnswer = finalAnswer.toLowerCase();
-
-    if (normalizedAnswer === "casterill") {
-
-        status.innerText =
-            "PRESIDENTIAL CLEARANCE ACCEPTED.";
-
-        status.style.color =
-            "#9cff9c";
+    // CASTERILL SECRET ROUTE
+    if (finalAnswer.toLowerCase().trim() === "casterill") {
+        status.innerText = "PRESIDENTIAL CLEARANCE ACCEPTED.";
+        status.style.color = "#9cff9c";
 
         setTimeout(() => {
             window.location.href = "archives.html";
