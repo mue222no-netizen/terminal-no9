@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CASTERILL // RESTRICTED</title>
+
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+    background:#030303;
+    color:#aaa;
+    font-family:"Courier New",monospace;
+    overflow-x:hidden;
+}
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.025) 0px,
+        rgba(255,255,255,.025) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+    z-index:50;
+}
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.65));
+    z-index:49;
+}
+.terminal{
+    width:min(950px,92%);
+    margin:45px auto;
+    border:1px solid #444;
+    background:#070707;
+    min-height:700px;
+    box-shadow:0 0 40px rgba(255,255,255,.03);
+}
+.header{
+    padding:14px 20px;
+    border-bottom:1px solid #333;
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    letter-spacing:2px;
+}
+.status{color:#666}
+.content{padding:35px}
+h1{
+    font-size:26px;
+    font-weight:normal;
+    letter-spacing:6px;
+    margin:0 0 8px;
+}
+.subtitle{color:#555;margin-bottom:35px}
+.file{
+    border-left:1px solid #444;
+    padding-left:25px;
+    line-height:1.9;
+    white-space:pre-wrap;
+    max-width:820px;
+}
+.section{
+    margin-top:30px;
+    border-top:1px solid #292929;
+    padding-top:20px;
+}
+.redacted{color:#444}
+.warning{color:#777}
+.small{font-size:12px;color:#555}
+.corrupt{animation:flicker .15s infinite}
+@keyframes flicker{
+    0%{opacity:1}
+    20%{opacity:.2}
+    40%{opacity:1}
+    60%{opacity:.35}
+    80%{opacity:.8}
+    100%{opacity:1}
+}
+.glitch{animation:glitch .12s infinite}
+@keyframes glitch{
+    0%{transform:translateX(0)}
+    25%{transform:translateX(-2px)}
+    50%{transform:translateX(2px)}
+    75%{transform:translateX(-1px)}
+    100%{transform:translateX(0)}
+}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<div class="terminal">
+
+    <div class="header">
+        <span>NEW VEGAS GOVERNMENT ARCHIVE</span>
+        <span class="status" id="status">RECORD OPEN</span>
+    </div>
+
+    <div class="content">
+
+        <h1>CASTERILL</h1>
+        <div class="subtitle">
+            PRESIDENTIAL ARCHIVE // RESTRICTED
+        </div>
+
+        <div class="file" id="file">
+
+FILE ID:
+NV-CAST-2097
+
+DATE:
+12 APRIL 2097
+
+SUBJECT:
+CASTERILL / MERCER
+
+CLASSIFICATION:
+RESTRICTED
+
+
+<div class="section">EARLY RECORD
+
+Elias Mercer — Observer IV — maintained
+a close personal relationship with
+President Casterill during the early
+years of his administration.
+
+The two were considered friends,
+despite their increasingly different
+approaches to anomalous research.</div>
+
+
+<div class="section">THE NORTHERN PROPERTY
+
+12 APRIL 2097
+
+PROPERTY TRANSFER CONFIRMED.
+
+PREVIOUS OWNER:
+████████████
+
+NEW OWNER:
+ALICE&amp;DAUGG.CO
+
+
+Following the acquisition of the northern
+Dusthaven property by Alice&amp;Daugg.co,
+workers discovered several unidentified
+objects beneath the surrounding terrain.
+
+The objects were subsequently designated:
+
+SHARDS
+
+Their origin remains unknown.
+
+President Casterill and Observer IV
+began a private investigation.</div>
+
+
+<div class="section">THREE MONTHS LATER
+
+Mercer eventually concluded that the
+discovery was irrelevant.
+
+Casterill disagreed.
+
+Their correspondence concerning the matter
+became increasingly hostile.
+
+During one private meeting, Mercer
+confronted the President regarding his
+continued investigation.
+
+The meeting ended abruptly.
+
+Casterill instructed Mercer to:
+
+"mind his own business."</div>
+
+
+<div class="section">FINAL ENTRY
+
+DATE:
+████████████
+
+PERSONAL OBSERVATION — OBSERVER IV
+
+Casterill appeared visibly distressed
+during a private meeting.
+
+Mercer asked what had happened.
+
+The President initially refused to answer.
+
+He eventually disclosed information
+concerning:
+
+    EMANATORS
+    THE SINS
+    ███████████████
+
+Casterill claimed that something had
+spoken to him while he was inside the
+northern territory.
+
+The identity of the entity remains
+unknown.
+
+No further details were recorded.</div>
+
+
+<div class="section">
+
+────────────────────────────────
+
+END OF FILE
+
+ADDITIONAL RECORDS:
+████████████████
+
+ACCESS:
+DENIED
+
+</div>
+
+        </div>
+
+        <div id="hidden" class="file hidden">
+            <br><br>
+            <span class="warning">
+ERROR.
+
+RECORD STATUS HAS CHANGED.
+
+ARCHIVE STATUS:
+
+NOT COMPLETE.
+            </span>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const status=document.getElementById("status");
+const file=document.getElementById("file");
+const hidden=document.getElementById("hidden");
+
+/* Keep the first page readable for a while. */
+setTimeout(()=>{
+    status.textContent="RECORD INTEGRITY: 96%";
+},30000);
+
+/* First subtle disturbance. */
+setTimeout(()=>{
+    status.textContent="RECORD INTEGRITY: 81%";
+    file.classList.add("glitch");
+},60000);
+
+/* Archive realizes something is wrong. */
+setTimeout(()=>{
+    status.textContent="ARCHIVE ERROR";
+    file.classList.remove("glitch");
+    hidden.classList.remove("hidden");
+},90000);
+
+/*
+====================================================
+TWO MINUTES:
+THE RECORD BEGINS TO CORRUPT ITSELF
+
+The corruption starts at the beginning of the
+document and gradually consumes the whole log.
+====================================================
+*/
+
+const corruptionCharacters =
+    "█▓▒░#$%&@!?<>/\\\\|+=-_~";
+
+function corruptText(text) {
+    let output = "";
+
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+
+        if (char === "\n" || char === "\r" || char === "\t") {
+            output += char;
+            continue;
+        }
+
+        // Preserve spaces so the original shape is still barely visible.
+        if (char === " ") {
+            output += " ";
+            continue;
+        }
+
+        output += corruptionCharacters[
+            Math.floor(Math.random() * corruptionCharacters.length)
+        ];
+    }
+
+    return output;
+}
+
+setTimeout(() => {
+
+    status.textContent = "RECORD INTEGRITY: 0%";
+
+    const originalText = file.innerText;
+
+    // Store the original so the corruption can consume it progressively.
+    let progress = 0;
+
+    const corruptionInterval = setInterval(() => {
+
+        progress += 0.035;
+
+        if (progress > 1) {
+            progress = 1;
+        }
+
+        const charsToCorrupt =
+            Math.floor(originalText.length * progress);
+
+        const visiblePart =
+            originalText.substring(0, charsToCorrupt);
+
+        const remainingPart =
+            originalText.substring(charsToCorrupt);
+
+        file.textContent =
+            corruptText(visiblePart) + remainingPart;
+
+        file.classList.add("glitch");
+
+        if (progress >= 1) {
+
+            clearInterval(corruptionInterval);
+
+            setTimeout(() => {
+
+                /*
+                ================================================
+                EVERYTHING GOES BLACK
+                ================================================
+                */
+
+                file.innerHTML = "";
+                file.style.display = "none";
+                hidden.style.display = "none";
+
+                document.body.style.background = "#000";
+                document.querySelector(".terminal").style.border =
+                    "1px solid #000";
+
+                status.textContent = "";
+
+                const screen =
+                    document.createElement("div");
+
+                screen.style.position = "fixed";
+                screen.style.inset = "0";
+                screen.style.display = "flex";
+                screen.style.alignItems = "center";
+                screen.style.justifyContent = "center";
+                screen.style.flexDirection = "column";
+                screen.style.background = "#000";
+                screen.style.color = "#aaa";
+                screen.style.fontFamily =
+                    '"Courier New", monospace';
+                screen.style.fontSize = "18px";
+                screen.style.letterSpacing = "2px";
+                screen.style.textAlign = "center";
+                screen.style.zIndex = "100";
+
+                screen.innerHTML = `
+                    DING! DING! DING!<br><br>
+                    YOU FOUND IT!
+                `;
+
+                document.body.appendChild(screen);
+
+                /*
+                Hold the message long enough for the player
+                to actually read it.
+                */
+
+                setTimeout(() => {
+
+                    screen.innerHTML = `
+                        DING! DING! DING!<br><br>
+                        YOU FOUND IT!<br><br>
+                        <span style="color:#555;font-size:13px;">
+                        CHAPTER 3 — ACT 1<br>
+                        THE DAMNED
+                        </span>
+                    `;
+
+                }, 1800);
+
+            }, 1200);
+        }
+
+    }, 120);
+
+},120000);
+</script>
+
+</body>
+</html>

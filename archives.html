@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARCHIVE TERMINAL</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        background: #030303;
+        color: #aaa;
+        font-family: "Courier New", monospace;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        overflow: hidden;
+    }
+
+    /* CRT scanlines */
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+
+        pointer-events: none;
+
+        background:
+            repeating-linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.025) 0px,
+                rgba(255,255,255,0.025) 1px,
+                transparent 2px,
+                transparent 4px
+            );
+
+        z-index: 20;
+    }
+
+    /* CRT darkness around edges */
+    body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+
+        pointer-events: none;
+
+        background:
+            radial-gradient(
+                ellipse at center,
+                transparent 45%,
+                rgba(0,0,0,0.55)
+            );
+
+        z-index: 19;
+    }
+
+    .terminal {
+        width: min(900px, 90%);
+        min-height: 520px;
+
+        background: #070707;
+
+        border: 1px solid #444;
+
+        box-shadow:
+            0 0 30px rgba(255,255,255,0.03);
+
+        padding: 30px;
+
+        position: relative;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+
+        border-bottom: 1px solid #333;
+
+        padding-bottom: 15px;
+
+        font-size: 13px;
+        letter-spacing: 2px;
+    }
+
+    .status {
+        color: #666;
+    }
+
+    .screen {
+        margin-top: 40px;
+
+        min-height: 270px;
+
+        font-size: 17px;
+
+        line-height: 2;
+
+        white-space: pre-wrap;
+    }
+
+    .cursor {
+        display: inline-block;
+
+        width: 9px;
+        height: 18px;
+
+        background: #aaa;
+
+        margin-left: 4px;
+
+        vertical-align: middle;
+
+        animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+        0%, 50% {
+            opacity: 1;
+        }
+
+        51%, 100% {
+            opacity: 0;
+        }
+    }
+
+    .progressContainer {
+        width: 100%;
+
+        height: 10px;
+
+        border: 1px solid #444;
+
+        margin-top: 35px;
+    }
+
+    .progressBar {
+        width: 0%;
+
+        height: 100%;
+
+        background: #888;
+
+        transition: width 0.4s linear;
+    }
+
+    .percentage {
+        margin-top: 10px;
+
+        color: #555;
+
+        font-size: 12px;
+
+        text-align: right;
+    }
+
+    .continue {
+        margin-top: 30px;
+
+        color: #777;
+
+        font-size: 13px;
+
+        animation: blink 1.2s infinite;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .glitch {
+        animation: glitch 0.12s infinite;
+    }
+
+    @keyframes glitch {
+
+        0% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-2px);
+        }
+
+        50% {
+            transform: translateX(2px);
+        }
+
+        75% {
+            transform: translateX(-1px);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="terminal">
+
+    <div class="header">
+
+        <span>
+            ARCHIVAL TERMINAL // NO-██
+        </span>
+
+        <span
+            class="status"
+            id="status">
+            CONNECTING
+        </span>
+
+    </div>
+
+
+    <div
+        class="screen"
+        id="screen">
+
+        INITIALIZING<span class="cursor"></span>
+
+    </div>
+
+
+    <div class="progressContainer">
+
+        <div
+            class="progressBar"
+            id="progressBar">
+        </div>
+
+    </div>
+
+
+    <div
+        class="percentage"
+        id="percentage">
+
+        0%
+
+    </div>
+
+
+    <div
+        class="continue hidden"
+        id="continue">
+
+        PRESS ENTER TO CONTINUE
+
+    </div>
+
+</div>
+
+
+<script>
+
+const screen =
+    document.getElementById("screen");
+
+const status =
+    document.getElementById("status");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const percentage =
+    document.getElementById("percentage");
+
+const continueText =
+    document.getElementById("continue");
+
+
+/*
+====================================================
+ARCHIVE LOADING SEQUENCE
+TOTAL TIME: 10 SECONDS
+====================================================
+*/
+
+const events = [
+
+    {
+        time: 0,
+        text: "INITIALIZING..."
+    },
+
+    {
+        time: 1000,
+        text: "ESTABLISHING ARCHIVE CONNECTION..."
+    },
+
+    {
+        time: 2200,
+        text: "SEARCHING BLACKSTONE RECORDS..."
+    },
+
+    {
+        time: 3400,
+        text: "LOADING PERSONNEL ARCHIVES..."
+    },
+
+    {
+        time: 4600,
+        text: "RETRIEVING GOVERNMENT RECORDS..."
+    },
+
+    {
+        time: 5800,
+        text: "SEARCHING PRESIDENTIAL DATABASE..."
+    },
+
+    {
+        time: 7000,
+        text: "DECRYPTING CLASSIFIED MATERIAL..."
+    },
+
+    {
+        time: 8200,
+        text: "RECONSTRUCTING DAMAGED FILES..."
+    },
+
+    {
+        time: 9200,
+        text: "ARCHIVE INDEX LOCATED."
+    },
+
+    {
+        time: 10000,
+        text: "ACCESS GRANTED."
+    }
+
+];
+
+
+events.forEach(event => {
+
+    setTimeout(() => {
+
+        screen.innerHTML =
+            event.text +
+            '<span class="cursor"></span>';
+
+        const progress =
+            Math.min(
+                (event.time / 10000) * 100,
+                100
+            );
+
+        progressBar.style.width =
+            progress + "%";
+
+        percentage.textContent =
+            Math.floor(progress) + "%";
+
+
+        /*
+        Change terminal status
+        as the archive loads.
+        */
+
+        if (event.time >= 7000) {
+
+            status.textContent =
+                "DECRYPTING";
+
+        }
+
+        if (event.time >= 9200) {
+
+            status.textContent =
+                "ARCHIVE FOUND";
+
+        }
+
+    }, event.time);
+
+});
+
+
+/*
+====================================================
+AFTER 10 SECONDS
+====================================================
+*/
+
+setTimeout(() => {
+
+    progressBar.style.width = "100%";
+
+    percentage.textContent = "100%";
+
+    status.textContent =
+        "ARCHIVE ONLINE";
+
+
+    screen.innerHTML =
+
+        "ACCESS GRANTED.<br><br>" +
+
+        "ARCHIVE: BLACKSTONE<br>" +
+
+        "SUBJECT: CASTERILL<br>" +
+
+        "CLASSIFICATION: ███████<br><br>" +
+
+        "RECORDS AVAILABLE.";
+
+
+    continueText.classList.remove("hidden");
+
+}, 10000);
+
+
+/*
+====================================================
+ENTER TO OPEN CASTERILL ARCHIVE
+====================================================
+*/
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter" &&
+            !continueText.classList.contains("hidden")
+        ) {
+
+            window.location.href =
+                "casterill.html";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
