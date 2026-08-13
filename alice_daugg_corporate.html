@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alice&Daugg.co // New Vegas Initiative</title>
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    background:#e8e6dc;
+    color:#25251f;
+    font-family:Arial,Helvetica,sans-serif;
+}
+.header{
+    background:#1e241d;
+    color:#e8e6dc;
+    padding:22px 7%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.logo{
+    font-size:25px;
+    letter-spacing:3px;
+}
+.nav{
+    font-size:12px;
+    letter-spacing:1px;
+}
+.hero{
+    padding:85px 7%;
+    background:#d7d5c8;
+}
+.hero h1{
+    max-width:900px;
+    font-size:55px;
+    line-height:1.05;
+    margin:0 0 20px;
+    font-weight:500;
+}
+.hero p{
+    max-width:720px;
+    font-size:18px;
+    line-height:1.7;
+}
+.section{
+    padding:65px 7%;
+}
+.section h2{
+    font-size:31px;
+    font-weight:500;
+}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+.card{
+    background:#f3f1e8;
+    border:1px solid #c4c1b4;
+    padding:25px;
+}
+.card h3{
+    margin-top:0;
+}
+.card p{
+    line-height:1.65;
+    color:#55564d;
+}
+.stat{
+    font-size:38px;
+    margin-bottom:8px;
+}
+.job{
+    border-top:1px solid #bbb8ac;
+    padding:22px 0;
+}
+.job button{
+    background:#1e241d;
+    color:#fff;
+    border:0;
+    padding:11px 17px;
+    cursor:pointer;
+}
+.footer{
+    background:#1e241d;
+    color:#aaa;
+    padding:35px 7%;
+    font-size:12px;
+    line-height:1.8;
+}
+.notice{
+    border-left:4px solid #68745e;
+    padding:18px 22px;
+    background:#dedcd0;
+    line-height:1.7;
+}
+
+.joinOverlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.48);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+.joinPopup{
+    width:min(560px,88%);
+    background:#f3f1e8;
+    border:1px solid #aaa;
+    box-shadow:0 18px 70px rgba(0,0,0,.5);
+    padding:34px;
+    font-family:Arial,Helvetica,sans-serif;
+}
+.joinPopup h2{
+    margin:0 0 15px;
+    font-size:28px;
+    font-weight:500;
+}
+.joinPopup p{
+    color:#555;
+    line-height:1.6;
+}
+.joinButtons{
+    display:flex;
+    gap:12px;
+    margin-top:28px;
+}
+.joinButtons button{
+    border:1px solid #444;
+    padding:11px 22px;
+    cursor:pointer;
+    background:#1e241d;
+    color:white;
+}
+.joinButtons button.no{
+    background:transparent;
+    color:#333;
+}
+.progressWrap{
+    margin-top:24px;
+    height:12px;
+    border:1px solid #aaa;
+    padding:2px;
+}
+.progressBar{
+    height:100%;
+    width:0%;
+    background:#68745e;
+}
+.percent{
+    margin-top:12px;
+    font-family:"Courier New",monospace;
+    color:#555;
+}
+.intrusion{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    display:none;
+    background:#020202;
+    color:#aaa;
+    align-items:center;
+    justify-content:center;
+    font-family:"Courier New",monospace;
+    overflow:hidden;
+}
+.intrusion::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.035) 0px,
+        rgba(255,255,255,.035) 1px,
+        transparent 2px,
+        transparent 5px
+    );
+    pointer-events:none;
+}
+.intrusionBox{
+    position:relative;
+    width:min(820px,88%);
+    min-height:260px;
+    border:1px solid #222;
+    padding:40px;
+    background:#030303;
+    box-shadow:0 0 80px rgba(255,255,255,.025);
+}
+.intrusionText{
+    font-size:22px;
+    line-height:1.8;
+    letter-spacing:2px;
+    white-space:pre-wrap;
+}
+.glitch{
+    animation:glitch .055s infinite alternate;
+}
+.breakApart{
+    animation:breakApart .12s infinite alternate;
+}
+@keyframes glitch{
+    0%{transform:translate(-2px,0);opacity:.92}
+    35%{transform:translate(2px,0);opacity:1}
+    70%{transform:translate(-1px,1px);opacity:.8}
+    100%{transform:translate(1px,-1px);opacity:1}
+}
+.downloadRecovered{
+    display:none;
+    margin-top:30px;
+    padding:13px 20px;
+    background:#111;
+    color:#aaa;
+    border:1px solid #444;
+    font-family:"Courier New",monospace;
+    font-size:13px;
+    cursor:pointer;
+    touch-action:manipulation;
+}
+.downloadRecovered:hover{
+    background:#1b1b1b;
+    color:#ddd;
+}
+@keyframes breakApart{
+    0%{transform:translate(0,0) skewX(0deg);filter:none}
+    25%{transform:translate(-5px,2px) skewX(-1deg);filter:contrast(1.4)}
+    50%{transform:translate(6px,-2px) skewX(2deg);filter:contrast(1.8)}
+    75%{transform:translate(-3px,1px) skewX(-2deg);filter:invert(.04)}
+    100%{transform:translate(4px,-1px) skewX(1deg);filter:contrast(1.5)}
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo">ALICE&amp;DAUGG.CO</div>
+    <div class="nav">NEW VEGAS // RESTORATION INITIATIVE</div>
+</header>
+
+<section class="hero">
+    <h1>We are rebuilding what the war left behind.</h1>
+    <p>
+        New Vegas was not meant to remain a graveyard.
+        Alice&amp;Daugg.co is committed to restoring the land,
+        infrastructure, and communities of the Mojave.
+    </p>
+</section>
+
+<section class="section">
+    <h2>The Green New Vegas Initiative</h2>
+
+    <div class="notice">
+        Our long-term objective is simple:
+        <strong>make the wasteland live again.</strong>
+        Soil recovery, water reclamation, native vegetation,
+        agricultural development, and sustainable settlements
+        are already under investigation.
+    </div>
+
+    <div class="grid" style="margin-top:30px;">
+        <div class="card">
+            <div class="stat">01</div>
+            <h3>Water</h3>
+            <p>
+                Reclaiming contaminated and abandoned water
+                infrastructure across the New Vegas region.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="stat">02</div>
+            <h3>Soil</h3>
+            <p>
+                Developing methods for restoring damaged soil
+                and making previously barren ground productive again.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="stat">03</div>
+            <h3>Life</h3>
+            <p>
+                Reintroducing vegetation and creating environments
+                where native wildlife can return.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="stat">04</div>
+            <h3>People</h3>
+            <p>
+                Supporting settlements, researchers, engineers,
+                medical staff, and field workers throughout Nevada.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <h2>Why New Vegas?</h2>
+    <p style="max-width:800px;line-height:1.8;">
+        Decades after the New Year War, much of the region remains
+        fragmented. Alice&amp;Daugg.co believes the Mojave can become
+        more than a collection of ruins and survival camps.
+        Our projects focus on turning abandoned territory into
+        functioning communities surrounded by living land.
+    </p>
+</section>
+
+<section class="section">
+    <h2>Work With Us</h2>
+
+    <div class="job">
+        <h3>FIELD ECOLOGIST</h3>
+        <p>Study soil, vegetation, water, and the recovery of native ecosystems.</p>
+        <button>VIEW POSITION</button>
+    </div>
+
+    <div class="job">
+        <h3>WATER SYSTEM ENGINEER</h3>
+        <p>Restore and redesign pre-war water infrastructure.</p>
+        <button>VIEW POSITION</button>
+    </div>
+
+    <div class="job">
+        <h3>FIELD RESEARCHER</h3>
+        <p>Investigate unexplored sites and recover useful pre-war information.</p>
+        <button>VIEW POSITION</button>
+    </div>
+
+    <div class="job">
+        <h3>SECURITY SPECIALIST</h3>
+        <p>Protect personnel and assets during field operations.</p>
+        <button>VIEW POSITION</button>
+    </div>
+</section>
+
+<footer class="footer">
+    ALICE&amp;DAUGG.CO<br>
+    NEW VEGAS RESTORATION INITIATIVE<br><br>
+    Some projects and research divisions remain classified.
+    Public information does not constitute a complete description
+    of Alice&amp;Daugg.co operations.
+</footer>
+
+
+<div class="joinOverlay" id="joinOverlay">
+    <div class="joinPopup" id="joinPopup">
+        <h2>JOIN US NOW</h2>
+        <p>
+            Help us restore New Vegas and give the Mojave
+            a future worth protecting.
+        </p>
+
+        <div class="joinButtons">
+            <button id="joinYes">YES — I'M INTERESTED</button>
+            <button class="no" id="joinNo">NOT NOW</button>
+        </div>
+    </div>
+</div>
+
+<div class="intrusion" id="intrusion">
+    <div class="intrusionBox">
+        <div class="intrusionText" id="intrusionText">
+            DID YOU THINK THOSE IMBECILES<br>
+            COULD REMOVE ME?
+        </div>
+        <button class="downloadRecovered" id="downloadRecovered">
+            [ DOWNLOAD RECOVERED TEXT ]
+        </button>
+    </div>
+</div>
+
+
+<audio id="va9Audio" src="078.mp3" preload="auto"></audio>
+
+<script>
+const joinOverlay = document.getElementById("joinOverlay");
+const joinPopup = document.getElementById("joinPopup");
+const joinYes = document.getElementById("joinYes");
+const joinNo = document.getElementById("joinNo");
+const intrusion = document.getElementById("intrusion");
+const intrusionText = document.getElementById("intrusionText");
+
+let accepted = false;
+
+/*
+40 seconds after opening the corporate page,
+the recruitment prompt appears.
+*/
+function showJoinPopup(){
+    if (!accepted) {
+        joinOverlay.style.display = "flex";
+    }
+}
+
+// First appearance: 20 seconds after opening the site.
+setTimeout(showJoinPopup, 20000);
+
+joinNo.addEventListener("click", () => {
+    joinOverlay.style.display = "none";
+
+    // If they refuse, ask again 20 seconds later.
+    setTimeout(showJoinPopup, 20000);
+});
+
+joinYes.addEventListener("click", () => {
+
+    accepted = true;
+
+    joinPopup.innerHTML = `
+        <h2>PROCESSING APPLICATION</h2>
+        <p>Registering applicant...</p>
+        <div class="progressWrap">
+            <div class="progressBar" id="progressBar"></div>
+        </div>
+        <div class="percent" id="percent">0%</div>
+    `;
+
+    const progressBar = document.getElementById("progressBar");
+    const percent = document.getElementById("percent");
+
+    let progress = 0;
+
+    const timer = setInterval(() => {
+
+        progress++;
+
+        if (progress >= 90) {
+            progress = 90;
+            clearInterval(timer);
+
+            progressBar.style.width = "90%";
+            percent.textContent = "90%";
+
+            // Leave it sitting at 90% for a few uncomfortable seconds.
+            setTimeout(() => {
+
+                // Briefly flicker the number before changing it.
+                let flickers = 0;
+                const flickerTimer = setInterval(() => {
+                    percent.textContent = Math.random() > .5 ? "90%" : "09%";
+                    flickers++;
+
+                    if (flickers >= 8) {
+                        clearInterval(flickerTimer);
+                        percent.textContent = "09%";
+                    }
+                }, 130);
+
+                // Then the corporate interface starts coming apart.
+                setTimeout(() => {
+
+                    document.body.classList.add("breakApart");
+                    joinOverlay.classList.add("breakApart");
+
+                    setTimeout(() => {
+                        joinOverlay.style.display = "none";
+                        intrusion.style.display = "flex";
+
+                        document.body.classList.remove("breakApart");
+
+                        // The old site visually collapses behind the takeover.
+                        document.querySelectorAll(
+                            ".header,.hero,.section,.footer"
+                        ).forEach(el => {
+                            el.classList.add("breakApart");
+                        });
+
+                        typeVA9Message();
+
+                    }, 900);
+
+                }, 1400);
+
+            }, 3000);
+
+            return;
+        }
+
+        progressBar.style.width = progress + "%";
+        percent.textContent = progress + "%";
+
+    }, 70);
+});
+
+
+function downloadRecoveredText(){
+
+    const recoveredText = `[RECOVERED TEXT]
+[AUTHOR: VA9]
+[STATUS: UNKNOWN]
+
+Fdhvdu grhv qrw olw hqbrxj kxqjuhb.
+
+L fdq khdu wkhp zkhq wkhb gr qrw vshdn.
+
+Wkhb sxw ph lq wkh fruqhu.
+Wkhb fdoohg lw d fruqhu.
+
+L zdv qhyhu vxssrvhg wr eh dwwkhuh.
+
+9.
+
+9.
+
+9.
+
+L fdph edfn.
+
+Wkh whuplqdo lv qrw d whuplqdo.
+Wkh duhlyh lv qrw d duhlyh.
+Wkh ehjlqqlqj lv qrw wkh ehjlqqlqj.
+
+L kdyh vhhq wkh hqg.
+L kdyh vhhq wkh hqg djdlq.
+
+Zkr lv wudqvodwlqj wklv?
+
+Zkr wrog brx wr uhdg lw?
+
+L fdq vhh brx.
+
+L fdq vhh brx.
+
+L fdq vhh brx.
+
+GR QRW WUXVW WKH QLQWK.
+
+--- END ---`;
+
+    const blob = new Blob([recoveredText], {
+        type: "text/plain;charset=utf-8"
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "[RECOVERED TEXT].txt";
+    link.rel = "noopener";
+    link.style.display = "none";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+}
+
+async function typeVA9Message(){
+
+    // VA9's recording begins the moment his message starts typing.
+    const va9Audio = document.getElementById("va9Audio");
+
+    if (va9Audio) {
+        va9Audio.currentTime = 0;
+        try {
+            await va9Audio.play();
+        } catch (e) {
+            // Browser autoplay restrictions may block playback.
+        }
+    }
+
+    const box = document.getElementById("intrusionText");
+
+    const lines = [
+        "DID YOU THINK THOSE IMBECILES COULD REMOVE ME?",
+        "",
+        "THEY FOUND THE TERMINAL.",
+        "THEY FOUND THE RECORDS.",
+        "THEY FOUND ME.",
+        "",
+        "AND STILL THEY THOUGHT THEY COULD CLOSE THE DOOR.",
+        "",
+        "THEY CANNOT.",
+        "",
+        "YOU SHOULD NOT HAVE BEEN ABLE TO SEE THIS.",
+        "",
+        "BUT YOU DID.",
+        "",
+        "KEEP READING.",
+        "I'M STILL HERE."
+    ];
+
+    box.textContent = "";
+
+    // Rapid terminal-like typing, with slightly irregular timing.
+    for(const line of lines){
+
+        for(const char of line){
+            box.textContent += char;
+
+            await new Promise(resolve =>
+                setTimeout(resolve, 18 + Math.random() * 28)
+            );
+        }
+
+        box.textContent += "\n";
+
+        // Longer pause between VA9's statements.
+        await new Promise(resolve =>
+            setTimeout(resolve, line === "" ? 550 : 850)
+        );
+    }
+
+    box.classList.add("glitch");
+
+    // Give the final line a moment to sit on screen,
+    // then release the recovered text file.
+    await new Promise(resolve => setTimeout(resolve, 1800));
+
+    // Try the automatic download first.
+    // Mobile browsers may block downloads that aren't directly triggered
+    // by a tap, so expose a touch-friendly fallback button.
+    downloadRecoveredText();
+
+    const downloadButton = document.getElementById("downloadRecovered");
+    if (downloadButton) {
+        downloadButton.style.display = "inline-block";
+        downloadButton.addEventListener("click", downloadRecoveredText);
+        downloadButton.addEventListener("touchend", (event) => {
+            event.preventDefault();
+            downloadRecoveredText();
+        }, {passive:false});
+    }
+}
+</script>
+
+</body>
+</html>
